@@ -1,1076 +1,596 @@
 import 'package:flutter/material.dart';
-// import 'funeral_matching_2.dart'; // 제거
 
-// 디자인 토큰
-const Color primaryColor = Color(0xFF8B5A3C);
-const Color backgroundColor = Color(0xFFF5F5F5);
-const Color cardColor = Color(0xFFEDE6DC);
-const Color chipSelected = Color(0xFF8B5A3C);
-const Color chipUnselected = Colors.white;
-const Color textPrimary = Colors.black87;
-const Color accentOrange = Color(0xFFD2691E);
-const Color greenColor = Color(0xFF4CAF50);
+/// 결과 리스트 페이지 (피그마 funeral_matching_3 반영)
+/// - 전역 테마 간섭 최소화: 색/보더/라운드 로컬 고정
+/// - 상단 요약/필터칩/리스트 카드
+/// - '상세확인' / '관심' / '상담' 액션은 샘플 동작(SnackBar)
 
-const TextStyle titleStyle = TextStyle(
-  fontSize: 16,
-  fontWeight: FontWeight.w600,
-  color: Colors.black87,
-);
+class AppColors {
+  static const brown = Color(0xFF8C6239);
+  static const lightBrown = Color(0xFFF0E6D6);
+  static const background = Color(0xFFF5F5F5);
+  static const border = Color(0xFFE1D7C7);
 
-TextStyle chipLabelStyle(bool selected) => TextStyle(
-  color: selected ? Colors.white : Colors.black87,
-  fontWeight: FontWeight.w500,
-);
-
-class FuneralMatchingScreen extends StatefulWidget {
-  const FuneralMatchingScreen({super.key});
-
-  @override
-  State<FuneralMatchingScreen> createState() => _FuneralMatchingScreenState();
+  static const accent = Color(0xFFD2691E);
+  static const header = Color(0xFFEDE6DC);
+  static const infoBlue = Color(0xFF1E88E5);
+  static const infoBlueLight = Color(0xFFE8F4FF);
+  static const infoBlueBorder = Color(0xFF90CAF9);
+  static const infoGreen = Color(0xFFEFF7E9);
+  static const textGrey = Color(0xFF666666);
 }
 
-class _FuneralMatchingScreenState extends State<FuneralMatchingScreen> {
-  // 상태 변수들
-  String selectedLocation = '서울 강남구';
-  String selectedBudget = '50-100만원';
-  String selectedSchedule = '3일 이내';
-  String selectedSize = '소형';
-
-  // 옵션 리스트들
-  final List<String> budgetOptions = ['50만원 이하', '50-100만원', '100-200만원', '200만원 이상'];
-  final List<String> scheduleOptions = ['긴급', '3일 이내', '일주일 이내'];
-  final List<String> sizeOptions = ['소형', '중형', '대형'];
+class FmResultsPage extends StatefulWidget {
+  const FmResultsPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: backgroundColor,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: const Text(
-          '장례 준비',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 18,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        centerTitle: false,
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildHeaderSection(),
-            const SizedBox(height: 30),
-            _buildAiRecommendationSection(),
-            const SizedBox(height: 30),
-            _buildCurrentLocationSection(),
-            const SizedBox(height: 30),
-            _buildBudgetSection(),
-            const SizedBox(height: 30),
-            _buildScheduleSection(),
-            const SizedBox(height: 30),
-            _buildPetSizeSection(),
-            const SizedBox(height: 40),
-            _buildFindButton(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHeaderSection() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: cardColor,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          Text(
-            '가까운 곳에서 편안하게\n믿을 수 있는 시설을 찾아드려요',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w700,
-              color: Colors.black87,
-              height: 1.3,
-            ),
-          ),
-          SizedBox(height: 12),
-          Text(
-            '매생이를 위한 마지막 배웅 준비',
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.black54,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildAiRecommendationSection() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFFE8F4FF),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF90CAF9)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Row(
-            children: [
-              Icon(Icons.smart_toy, color: Color(0xFF1976D2)),
-              SizedBox(width: 8),
-              Text(
-                'AI 맞춤 추천',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black87,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          const Text(
-            '매생이(미니어처 푸들, 8살)의 프로필을 분석한 결과입니다.',
-            style: TextStyle(
-              color: Color(0xFF1976D2),
-              fontSize: 14,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              _buildChipTag('위치 : $selectedLocation'),
-              _buildChipTag('예산 : $selectedBudget'),
-              _buildChipTag('일정 : $selectedSchedule'),
-              _buildChipTag('크기 : $selectedSize'),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildChipTag(String text) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: const Color(0xFF1E88E5),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Text(
-        text,
-        style: const TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.w600,
-          fontSize: 12,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildCurrentLocationSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Row(
-          children: [
-            Icon(Icons.place, color: Colors.red, size: 20),
-            SizedBox(width: 8),
-            Text('현재 위치', style: titleStyle),
-          ],
-        ),
-        const SizedBox(height: 16),
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: const Color(0xFFEFF7E9),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: const Color(0xFFC5E1A5)),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFC8E6C9),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: const Text(
-                      'AI추천',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black87,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  const Expanded(
-                    child: Text(
-                      '단골병원에서 3km / 평균이동시간 15분',
-                      style: TextStyle(fontSize: 14),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              GestureDetector(
-                onTap: _onLocationChange,
-                child: const Row(
-                  children: [
-                    Icon(Icons.my_location, color: Colors.red, size: 20),
-                    SizedBox(width: 6),
-                    Text(
-                      '위치 변경',
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildBudgetSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Row(
-          children: [
-            Icon(Icons.attach_money, color: accentOrange, size: 20),
-            SizedBox(width: 8),
-            Text('예산 범위', style: titleStyle),
-          ],
-        ),
-        const SizedBox(height: 16),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: budgetOptions.map((budget) {
-            final selected = selectedBudget == budget;
-            return ChoiceChip(
-              label: Text(budget),
-              selected: selected,
-              selectedColor: chipSelected,
-              backgroundColor: chipUnselected,
-              shape: StadiumBorder(
-                side: BorderSide(
-                  color: selected ? chipSelected : Colors.grey.shade300,
-                ),
-              ),
-              labelStyle: chipLabelStyle(selected),
-              onSelected: (v) => setState(() => selectedBudget = budget),
-            );
-          }).toList(),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildScheduleSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Row(
-          children: [
-            Icon(Icons.calendar_month, color: accentOrange, size: 20),
-            SizedBox(width: 8),
-            Text('희망 일정', style: titleStyle),
-          ],
-        ),
-        const SizedBox(height: 16),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: scheduleOptions.map((schedule) {
-            final selected = selectedSchedule == schedule;
-            return ChoiceChip(
-              label: Text(schedule),
-              selected: selected,
-              selectedColor: chipSelected,
-              backgroundColor: chipUnselected,
-              shape: StadiumBorder(
-                side: BorderSide(
-                  color: selected ? chipSelected : Colors.grey.shade300,
-                ),
-              ),
-              labelStyle: chipLabelStyle(selected),
-              onSelected: (v) => setState(() => selectedSchedule = schedule),
-            );
-          }).toList(),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildPetSizeSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Row(
-          children: [
-            Icon(Icons.pets, color: accentOrange, size: 20),
-            SizedBox(width: 8),
-            Text('반려동물 크기', style: titleStyle),
-          ],
-        ),
-        const SizedBox(height: 16),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: sizeOptions.map((size) {
-            final selected = selectedSize == size;
-            return ChoiceChip(
-              label: Text(size),
-              selected: selected,
-              selectedColor: chipSelected,
-              backgroundColor: chipUnselected,
-              shape: StadiumBorder(
-                side: BorderSide(
-                  color: selected ? chipSelected : Colors.grey.shade300,
-                ),
-              ),
-              labelStyle: chipLabelStyle(selected),
-              onSelected: (v) => setState(() => selectedSize = size),
-            );
-          }).toList(),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildFindButton() {
-    return SizedBox(
-      width: double.infinity,
-      height: 50,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: primaryColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          elevation: 0,
-        ),
-        onPressed: _onFindFacilities,
-        child: const Text(
-          '맞춤 시설 찾기',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _onLocationChange() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => _LocationSelectionScreen(),
-      ),
-    ).then((result) {
-      if (result != null && result is String) {
-        setState(() {
-          selectedLocation = result;
-        });
-      }
-    });
-  }
-
-  void _onFindFacilities() {
-    // 로딩 다이얼로그 표시
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) => const AlertDialog(
-        content: Row(
-          children: [
-            CircularProgressIndicator(),
-            SizedBox(width: 20),
-            Text('맞춤 시설을 찾고 있습니다...'),
-          ],
-        ),
-      ),
-    );
-
-    // 2초 후 검색 결과 화면으로 이동
-    Future.delayed(const Duration(seconds: 2), () {
-      Navigator.pop(context); // 로딩 다이얼로그 닫기
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => _SearchResultScreen(),
-        ),
-      );
-    });
-  }
+  State<FmResultsPage> createState() => _FmResultsPageState();
 }
 
-// 위치 선택 화면 (funeral_matching_2.dart와 동일한 로직)
-class _LocationSelectionScreen extends StatefulWidget {
-  @override
-  State<_LocationSelectionScreen> createState() => __LocationSelectionScreenState();
-}
+class _FmResultsPageState extends State<FmResultsPage> {
+  // 검색조건(1번/2번에서 넘어왔다고 가정한 값을 임시로 표시)
+  final String _location = '서울시 강남구';
+  final String _budget = '50-100만원';
+  final String _schedule = '3일 이내';
+  final String _petSize = '소형';
 
-class __LocationSelectionScreenState extends State<_LocationSelectionScreen> {
-  String selectedLocation = '';
+  // 필터 칩
+  String _tab = '전체';
+  final _tabs = const ['전체', '당일예약', '24시간'];
 
-  final List<Map<String, dynamic>> recentLocations = [
-    {
-      'name': '서울시 강남구',
-      'description': '서울시 강남구 대치동로',
-      'icon': Icons.location_city,
-      'color': Colors.brown,
-    },
-    {
-      'name': '서울시 송파구',
-      'description': '서울시 송파구 잠실로',
-      'icon': Icons.apartment,
-      'color': Colors.red,
-    },
-  ];
+  // 관심 토글
+  final Set<int> _favorites = {};
 
-  final List<Map<String, dynamic>> popularRegions = [
-    {'name': '서울시', 'icon': Icons.location_city},
-    {'name': '부산시', 'icon': Icons.nights_stay},
+  // 더미 데이터(목업)
+  late final List<Facility> _items = [
+    Facility(
+      name: '평안 동물병원 장례식장',
+      rating: 4.8,
+      reviews: 124,
+      distanceKm: 1.2,
+      timeMin: 5,
+      price: '85만원',
+      priceNote: '(조건 맞춤)',
+      canReserveToday: '오늘 예약 가능 · 오후 2시부터',
+      badges: const ['24시간', '픽업서비스', '개별추모실'],
+      tag: '당일예약',
+      addressBrief: '강남구 테헤란로 123길',
+    ),
+    Facility(
+      name: '사랑 펫 메모리얼',
+      rating: 4.6,
+      reviews: 89,
+      distanceKm: 1.8,
+      timeMin: 7,
+      price: '72만원',
+      priceNote: '(15% 할인 적용)',
+      canReserveToday: '내일 예약 가능 · 오전 9시부터',
+      badges: const ['24시간', '픽업서비스', '개별추모실'],
+      tag: '할인중',
+      addressBrief: '서초구 반포대로 45',
+    ),
+    Facility(
+      name: '하늘숲 동물장례문화원',
+      rating: 4.7,
+      reviews: 211,
+      distanceKm: 3.1,
+      timeMin: 12,
+      price: '90만원',
+      priceNote: '',
+      canReserveToday: '오늘 예약 가능 · 상시',
+      badges: const ['픽업서비스', '개별추모실'],
+      tag: '24시간',
+      addressBrief: '송파구 올림픽로 300',
+    ),
   ];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: backgroundColor,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: const Text(
-          '위치 설정',
-          style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.w500),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, selectedLocation),
-            child: const Text('완료', style: TextStyle(color: accentOrange)),
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // 검색 필드
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(25),
-                boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 2))],
-              ),
-              child: const TextField(
-                decoration: InputDecoration(
-                  hintText: '지역명, 도로명 또는 건물명 검색',
-                  prefixIcon: Icon(Icons.search, color: Colors.grey),
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                ),
-              ),
-            ),
-            const SizedBox(height: 30),
-            
-            // 현재 위치
-            const Text('현재 위치', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-            const SizedBox(height: 16),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)],
-              ),
-              child: ListTile(
-                contentPadding: const EdgeInsets.all(16),
-                leading: Container(
-                  width: 48, height: 48,
-                  decoration: BoxDecoration(color: Colors.brown.shade100, borderRadius: BorderRadius.circular(24)),
-                  child: const Icon(Icons.my_location, color: Colors.brown),
-                ),
-                title: const Text('현재 위치 사용', style: TextStyle(fontWeight: FontWeight.w600)),
-                subtitle: const Text('GPS를 통해 자동으로 감지', style: TextStyle(color: Colors.grey)),
-                trailing: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(color: accentOrange, borderRadius: BorderRadius.circular(16)),
-                  child: const Text('정확', style: TextStyle(color: Colors.white, fontSize: 12)),
-                ),
-                onTap: () {
-                  setState(() => selectedLocation = '서울시 강남구 (현재 위치)');
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('현재 위치가 설정되었습니다'), backgroundColor: accentOrange),
-                  );
-                },
-              ),
-            ),
-            const SizedBox(height: 30),
-            
-            // 최근 검색 위치
-            const Text('최근 검색한 위치', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-            const SizedBox(height: 16),
-            ...recentLocations.map((loc) => Container(
-              margin: const EdgeInsets.only(bottom: 12),
-              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)),
-              child: ListTile(
-                leading: Icon(loc['icon'], color: loc['color']),
-                title: Text(loc['name']),
-                subtitle: Text(loc['description']),
-                onTap: () {
-                  setState(() => selectedLocation = loc['name']);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('${loc['name']}이 선택되었습니다'), backgroundColor: accentOrange),
-                  );
-                },
-              ),
-            )),
-            const SizedBox(height: 30),
-            
-            // 인기 지역
-            const Text('인기 지역', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-            const SizedBox(height: 16),
-            Row(
-              children: popularRegions.map((region) => Expanded(
-                child: GestureDetector(
-                  onTap: () {
-                    setState(() => selectedLocation = region['name']);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('${region['name']}이 선택되었습니다'), backgroundColor: accentOrange),
-                    );
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
-                    height: 100,
-                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(region['icon'], size: 40, color: primaryColor),
-                        const SizedBox(height: 8),
-                        Text(region['name'], style: const TextStyle(fontWeight: FontWeight.w600)),
-                      ],
-                    ),
+    final mq = MediaQuery.of(context);
+    final results = _filtered(_items, _tab);
+    return MediaQuery(
+      data: mq.copyWith(textScaleFactor: mq.textScaleFactor.clamp(1.0, 1.1)),
+      child: Scaffold(
+        backgroundColor: AppColors.background,
+        body: SafeArea(
+          child: CustomScrollView(
+            physics: const BouncingScrollPhysics(),
+            slivers: [
+              SliverToBoxAdapter(child: _HeaderBar(onBack: () => Navigator.maybePop(context))),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 12, 20, 8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _SummaryHeader(totalCount: _items.length),
+                      const SizedBox(height: 12),
+                      _AiReasonBanner(),
+                      const SizedBox(height: 12),
+                      _SearchConditionCard(
+                        location: _location,
+                        budget: _budget,
+                        schedule: _schedule,
+                        petSize: _petSize,
+                      ),
+                      const SizedBox(height: 12),
+                      _FilterTabs(
+                        tabs: _tabs,
+                        active: _tab,
+                        onChanged: (t) => setState(() => _tab = t),
+                        totalCount: _items.length,
+                        todayCount: _items.where((e) => e.tag == '당일예약').length,
+                        allDayCount: _items.where((e) => e.tag == '24시간').length,
+                      ),
+                    ],
                   ),
                 ),
-              )).toList(),
-            ),
-            const SizedBox(height: 40),
-            
-            // 확인 버튼
-            SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: ElevatedButton(
-                onPressed: () => Navigator.pop(context, selectedLocation),
-                style: ElevatedButton.styleFrom(backgroundColor: accentOrange, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
-                child: const Text('현재 위치로 설정하기', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
               ),
-            ),
-          ],
+              SliverList.builder(
+                itemCount: results.length,
+                itemBuilder: (_, i) => Padding(
+                  padding: EdgeInsets.fromLTRB(20, i == 0 ? 8 : 6, 20, 6),
+                  child: _FacilityCard(
+                    facility: results[i],
+                    isFavorite: _favorites.contains(results[i].hashCode),
+                    onFavoriteToggle: () {
+                      setState(() {
+                        final h = results[i].hashCode;
+                        if (_favorites.contains(h)) {
+                          _favorites.remove(h);
+                        } else {
+                          _favorites.add(h);
+                        }
+                      });
+                    },
+                    onConsult: () => _toast(context, '상담 연결을 준비 중입니다.'),
+                    onDetail: () => _toast(context, '상세 페이지는 다음 단계에서 연결됩니다.'),
+                    primaryColor: AppColors.brown,
+                  ),
+                ),
+              ),
+              const SliverToBoxAdapter(child: SizedBox(height: 16)),
+            ],
+          ),
         ),
       ),
     );
   }
+
+  List<Facility> _filtered(List<Facility> list, String tab) {
+    switch (tab) {
+      case '당일예약':
+        return list.where((e) => e.tag == '당일예약').toList();
+      case '24시간':
+        return list.where((e) => e.tag == '24시간').toList();
+      default:
+        return list;
+    }
+  }
+
+  void _toast(BuildContext context, String msg) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(msg), backgroundColor: AppColors.brown),
+    );
+  }
 }
 
-// 검색 결과 화면 (funeral_matching_3.dart와 동일한 로직)
-class _SearchResultScreen extends StatefulWidget {
-  @override
-  State<_SearchResultScreen> createState() => __SearchResultScreenState();
+// ===== 모델 =====
+
+class Facility {
+  final String name;
+  final double rating;
+  final int reviews;
+  final double distanceKm;
+  final int timeMin;
+  final String price;
+  final String priceNote;
+  final String canReserveToday;
+  final List<String> badges;
+  final String tag; // '당일예약' / '할인중' / '24시간' 등
+  final String addressBrief;
+
+  Facility({
+    required this.name,
+    required this.rating,
+    required this.reviews,
+    required this.distanceKm,
+    required this.timeMin,
+    required this.price,
+    required this.priceNote,
+    required this.canReserveToday,
+    required this.badges,
+    required this.tag,
+    required this.addressBrief,
+  });
 }
 
-class __SearchResultScreenState extends State<_SearchResultScreen> {
-  String selectedFilter = '전체';
+// ===== 상단 영역 =====
+
+class _HeaderBar extends StatelessWidget {
+  final VoidCallback onBack;
+  const _HeaderBar({required this.onBack});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: backgroundColor,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 1,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: const Text('시설 찾기', style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600)),
-      ),
-      body: Column(
-        children: [
-          _buildSummarySection(),
-          _buildFilterChips(),
-          _buildSortingRow(),
-          Expanded(
-            child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              children: [
-                _buildFacilityCard(
-                  name: '평안 동물병원 장례식장',
-                  rating: 4.8,
-                  reviewCount: 124,
-                  distance: '1.2km',
-                  travelTime: '5분 거리',
-                  price: '85만원',
-                  priceSubtext: '(조건 맞춤)',
-                  availability: '오늘 예약 가능 • 오후 2시부터',
-                  tags: ['24시간', '픽업서비스', '개별추모실'],
-                  features: ['화장시설', '주차가능'],
-                  buttonText: '당일예약',
-                  buttonColor: greenColor,
-                  usageCount: 130,
-                ),
-                const SizedBox(height: 16),
-                _buildFacilityCard(
-                  name: '사랑 펫 메모리얼',
-                  rating: 4.6,
-                  reviewCount: 89,
-                  distance: '1.8km',
-                  travelTime: '7분 거리',
-                  price: '72만원',
-                  priceSubtext: '(15%할인 적용)',
-                  availability: '내일 예약 가능 • 오전 9시부터',
-                  tags: ['24시간', '픽업서비스'],
-                  features: [],
-                  buttonText: '할인중',
-                  buttonColor: accentOrange,
-                  usageCount: 98,
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSummarySection() {
     return Container(
-      color: Colors.white,
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        children: [
-          // 상단 헤더
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text('총 12개 시설 찾음', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(color: Colors.grey.shade100, borderRadius: BorderRadius.circular(4)),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.bookmark_border, size: 16, color: Colors.grey.shade700),
-                        const SizedBox(width: 4),
-                        Text('북마크', style: TextStyle(fontSize: 12, color: Colors.grey.shade700)),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(color: Colors.grey.shade100, borderRadius: BorderRadius.circular(4)),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.map, size: 16, color: Colors.grey.shade700),
-                        const SizedBox(width: 4),
-                        Text('지도', style: TextStyle(fontSize: 12, color: Colors.grey.shade700)),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          
-          const SizedBox(height: 12),
-          
-          // AI 추천 알림
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.blue.shade50,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Row(
-              children: [
-                Icon(Icons.smart_toy, color: Colors.blue.shade600, size: 20),
-                const SizedBox(width: 8),
-                const Expanded(
-                  child: Text(
-                    'AI 추천 이유:\n소형견 전문 케어 시설 / 8살 고령견 맞춤 환경 / 예산 범위 내 최고 가성비',
-                    style: TextStyle(fontSize: 12, color: Colors.blue),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          
-          const SizedBox(height: 12),
-          
-          // 검색 조건 카드
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: cardColor,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: primaryColor, width: 1),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text('검색조건', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Row(
-                            children: [
-                              Icon(Icons.location_on, size: 16, color: Colors.black87),
-                              SizedBox(width: 4),
-                              Text('서울시 강남구', style: TextStyle(fontSize: 12)),
-                            ],
-                          ),
-                          SizedBox(height: 4),
-                          Row(
-                            children: [
-                              Icon(Icons.calendar_month, size: 16, color: Colors.black87),
-                              SizedBox(width: 4),
-                              Text('3일 이내', style: TextStyle(fontSize: 12)),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Row(
-                            children: [
-                              Icon(Icons.attach_money, size: 16, color: Colors.black87),
-                              SizedBox(width: 4),
-                              Text('50-100만원', style: TextStyle(fontSize: 12)),
-                            ],
-                          ),
-                          SizedBox(height: 4),
-                          Row(
-                            children: [
-                              Icon(Icons.pets, size: 16, color: Colors.black87),
-                              SizedBox(width: 4),
-                              Text('소형', style: TextStyle(fontSize: 12)),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFilterChips() {
-    final filters = [
-      {'label': '전체', 'count': 12, 'color': primaryColor},
-      {'label': '당일예약', 'count': 5, 'color': accentOrange},
-      {'label': '24시간', 'count': 8, 'color': accentOrange},
-    ];
-
-    return Container(
-      color: Colors.white,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      color: AppColors.background,
+      padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
       child: Row(
-        children: filters.map((filter) {
-          final isSelected = selectedFilter == filter['label'];
-          return Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: isSelected ? filter['color'] as Color : Colors.grey.shade200,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Text(
-                '${filter['label']} ${filter['count']}',
-                style: TextStyle(
-                  color: isSelected ? Colors.white : Colors.black87,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          );
-        }).toList(),
+        children: [
+          IconButton(onPressed: onBack, icon: const Icon(Icons.arrow_back, color: Colors.black)),
+          const SizedBox(width: 4),
+          const Text('시설 찾기', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+          const Spacer(),
+          IconButton(
+            onPressed: () {},
+            tooltip: '목록',
+            icon: const Icon(Icons.view_list_outlined, color: Colors.black87),
+          ),
+          IconButton(
+            onPressed: () {},
+            tooltip: '지도',
+            icon: const Icon(Icons.map_outlined, color: Colors.black87),
+          ),
+        ],
       ),
     );
   }
+}
 
-  Widget _buildSortingRow() {
+class _SummaryHeader extends StatelessWidget {
+  final int totalCount;
+  const _SummaryHeader({required this.totalCount});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Text('총 $totalCount개 시설 찾음',
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+        const Spacer(),
+        OutlinedButton.icon(
+          onPressed: () {},
+          icon: const Icon(Icons.sort, size: 18, color: Colors.black87),
+          label: const Text('정렬', style: TextStyle(color: Colors.black87)),
+          style: OutlinedButton.styleFrom(
+            side: const BorderSide(color: AppColors.border),
+            foregroundColor: Colors.black87,
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _AiReasonBanner extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.blue.shade50,
-        borderRadius: BorderRadius.circular(8),
+        color: AppColors.infoBlueLight,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.infoBlueBorder, width: 1),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: const Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: const [
-              Icon(Icons.smart_toy, color: Colors.blue, size: 16),
-              SizedBox(width: 6),
-              Text(
-                '매생이를 위한 AI 맞춤 추천 순서',
-                style: TextStyle(fontSize: 14, color: Colors.blue, fontWeight: FontWeight.w500),
-              ),
-            ],
-          ),
-          Row(
-            children: const [
-              Text('정렬 변경', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
-              SizedBox(width: 4),
-              Icon(Icons.keyboard_arrow_down, size: 16),
-            ],
+          Icon(Icons.smart_toy, color: AppColors.infoBlue, size: 18),
+          SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              'AI 추천 이유: 소형견 전문 케어 시설 / 응급 고품질 장례 환경 / 리뷰 평판 내 비교 가성비',
+              style: TextStyle(fontSize: 12, color: AppColors.infoBlue),
+            ),
           ),
         ],
       ),
     );
   }
+}
 
-  Widget _buildFacilityCard({
-    required String name,
-    required double rating,
-    required int reviewCount,
-    required String distance,
-    required String travelTime,
-    required String price,
-    required String priceSubtext,
-    required String availability,
-    required List<String> tags,
-    required List<String> features,
-    required String buttonText,
-    required Color buttonColor,
-    required int usageCount,
-  }) {
+class _SearchConditionCard extends StatelessWidget {
+  final String location, budget, schedule, petSize;
+  const _SearchConditionCard({
+    required this.location,
+    required this.budget,
+    required this.schedule,
+    required this.petSize,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    Widget pill(String t) => Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: AppColors.border, width: 1),
+          ),
+          child: Text(t, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+        );
+
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        border: Border.all(color: AppColors.border, width: 1),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // 헤더 영역
-          Row(
-            children: [
-              Icon(Icons.local_hospital, color: Colors.blue, size: 20),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  name,
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.blue),
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: buttonColor,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Text(
-                  buttonText,
-                  style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),
-                ),
-              ),
-            ],
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Row(children: [
+          const Icon(Icons.place, size: 18, color: Colors.black87),
+          const SizedBox(width: 6),
+          Expanded(child: Text(location, style: const TextStyle(fontSize: 14))),
+          const SizedBox(width: 8),
+          const Icon(Icons.pets, size: 18, color: Colors.black87),
+          const SizedBox(width: 6),
+          Text(petSize, style: const TextStyle(fontSize: 14)),
+        ]),
+        const SizedBox(height: 10),
+        Row(children: [
+          const Icon(Icons.event, size: 18, color: Colors.black87),
+          const SizedBox(width: 6),
+          Expanded(child: Text(schedule, style: const TextStyle(fontSize: 14))),
+          const SizedBox(width: 8),
+          const Icon(Icons.attach_money, size: 18, color: Colors.black87),
+          const SizedBox(width: 6),
+          Text(budget, style: const TextStyle(fontSize: 14)),
+        ]),
+        const SizedBox(height: 12),
+        Wrap(spacing: 8, runSpacing: 8, children: [
+          pill(location),
+          pill(budget),
+          pill(schedule),
+          pill(petSize),
+        ]),
+      ]),
+    );
+  }
+}
+
+class _FilterTabs extends StatelessWidget {
+  final List<String> tabs;
+  final String active;
+  final void Function(String) onChanged;
+  final int totalCount, todayCount, allDayCount;
+
+  const _FilterTabs({
+    required this.tabs,
+    required this.active,
+    required this.onChanged,
+    required this.totalCount,
+    required this.todayCount,
+    required this.allDayCount,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    int countFor(String t) {
+      switch (t) {
+        case '당일예약':
+          return todayCount;
+        case '24시간':
+          return allDayCount;
+        default:
+          return totalCount;
+      }
+    }
+
+    return Wrap(
+      spacing: 8,
+      children: tabs.map((t) {
+        final selected = t == active;
+        return ChoiceChip(
+          selected: selected,
+          onSelected: (_) => onChanged(t),
+          label: Text('$t ${countFor(t)}'),
+          labelStyle: TextStyle(
+            fontWeight: FontWeight.w700,
+            color: selected ? Colors.white : Colors.black87,
           ),
-          
-          const SizedBox(height: 8),
-          
-          // 별점과 이용 횟수
-          Row(
-            children: [
-              ...List.generate(5, (i) => Icon(
-                i < rating.floor() ? Icons.star : Icons.star_border,
-                color: Colors.orange,
-                size: 16,
+          backgroundColor: Colors.white,
+          selectedColor: AppColors.brown,
+          shape: StadiumBorder(
+            side: BorderSide(color: selected ? AppColors.brown : AppColors.border),
+          ),
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        );
+      }).toList(),
+    );
+  }
+}
+
+// ===== 리스트 카드 =====
+
+class _FacilityCard extends StatelessWidget {
+  final Facility facility;
+  final bool isFavorite;
+  final VoidCallback onFavoriteToggle;
+  final VoidCallback onConsult;
+  final VoidCallback onDetail;
+  final Color primaryColor;
+
+  const _FacilityCard({
+    required this.facility,
+    required this.isFavorite,
+    required this.onFavoriteToggle,
+    required this.onConsult,
+    required this.onDetail,
+    required this.primaryColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    Widget tag(String text, {Color? bg, Color? fg}) => Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+          decoration: BoxDecoration(
+            color: bg ?? AppColors.lightBrown,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Text(text,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: fg ?? Colors.black87,
               )),
-              const SizedBox(width: 6),
-              Text('$rating($reviewCount)', style: const TextStyle(fontSize: 12, color: Colors.black87)),
-              const Text(' • ', style: TextStyle(color: Colors.grey)),
-              Text('${usageCount}회 이용', style: const TextStyle(fontSize: 12, color: Colors.grey)),
-            ],
+        );
+
+    Widget badge(String text) => Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: AppColors.border),
           ),
-          
-          const SizedBox(height: 4),
-          
-          // 거리 정보
-          Row(
-            children: [
-              const Icon(Icons.location_on, color: Colors.red, size: 16),
-              const SizedBox(width: 4),
-              Text(distance, style: const TextStyle(fontSize: 12)),
-              const SizedBox(width: 12),
-              const Icon(Icons.directions_car, color: Colors.grey, size: 16),
-              const SizedBox(width: 4),
-              Text(travelTime, style: const TextStyle(fontSize: 12)),
-            ],
-          ),
-          
-          const SizedBox(height: 8),
-          
-          // 가격 정보
-          Row(
-            children: [
-              const Icon(Icons.attach_money, color: Colors.green, size: 16),
-              const SizedBox(width: 4),
-              Text('예상 비용 : ', style: const TextStyle(fontSize: 13)),
-              Text(price, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
-              Text(priceSubtext, style: const TextStyle(fontSize: 13, color: Colors.grey)),
-            ],
-          ),
-          
-          const SizedBox(height: 4),
-          
-          // 예약 가능 시간
-          Row(
-            children: [
-              const Icon(Icons.schedule, color: Colors.blue, size: 16),
-              const SizedBox(width: 4),
-              Expanded(
-                child: Text(
-                  availability,
-                  style: const TextStyle(fontSize: 12, color: Colors.black87),
-                ),
-              ),
-            ],
-          ),
-          
-          const SizedBox(height: 12),
-          
-          // 태그들
-          Wrap(
-            spacing: 6,
-            runSpacing: 6,
-            children: [
-              ...tags.map((tag) => Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: greenColor,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(tag, style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w600)),
-              )),
-              ...features.map((feature) => Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade200,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(feature, style: const TextStyle(color: Colors.black87, fontSize: 10)),
-              )),
-            ],
-          ),
-          
-          const SizedBox(height: 16),
-          
-          // 하단 버튼들
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton.icon(
-                  style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: Colors.blue),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                  ),
-                  icon: const Icon(Icons.favorite_border, color: Colors.blue, size: 16),
-                  label: const Text('관심', style: TextStyle(color: Colors.blue, fontSize: 12)),
-                  onPressed: () {},
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: OutlinedButton.icon(
-                  style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: Colors.red),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                  ),
-                  icon: const Icon(Icons.phone, color: Colors.red, size: 16),
-                  label: const Text('상담', style: TextStyle(color: Colors.red, fontSize: 12)),
-                  onPressed: () {},
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black87,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                  ),
-                  icon: const Icon(Icons.info, color: Colors.white, size: 16),
-                  label: const Text('상세확인', style: TextStyle(color: Colors.white, fontSize: 12)),
-                  onPressed: () {},
-                ),
-              ),
-            ],
-          ),
-        ],
+          child: Text(text, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700)),
+        );
+
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.border, width: 1),
       ),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        // 헤더(시설명 + 상태 뱃지)
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Text(facility.name,
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800)),
+            ),
+            const SizedBox(width: 8),
+            if (facility.tag == '당일예약') tag('당일예약', bg: const Color(0xFFE8F5E9), fg: const Color(0xFF2E7D32)),
+            if (facility.tag == '할인중') tag('할인중', bg: const Color(0xFFFFF3E0), fg: AppColors.accent),
+            if (facility.tag == '24시간') tag('24시간', bg: const Color(0xFFE3F2FD), fg: AppColors.infoBlue),
+          ],
+        ),
+        const SizedBox(height: 6),
+
+        // 평점/거리/시간
+        Row(
+          children: [
+            const Icon(Icons.star, size: 16, color: Color(0xFFFFA000)),
+            const SizedBox(width: 4),
+            Text('${facility.rating}  ',
+                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
+            Text('(${facility.reviews}리뷰) · ',
+                style: const TextStyle(fontSize: 12, color: AppColors.textGrey)),
+            Text('${facility.distanceKm}km · ${facility.timeMin}분 거리',
+                style: const TextStyle(fontSize: 12, color: AppColors.textGrey)),
+          ],
+        ),
+        const SizedBox(height: 8),
+
+        // 예산/예약 가능
+        Text('예상 비용 : ${facility.price}${facility.priceNote.isNotEmpty ? " ${facility.priceNote}" : ""}',
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
+        const SizedBox(height: 4),
+        Text(facility.canReserveToday,
+            style: const TextStyle(fontSize: 12, color: AppColors.textGrey)),
+        const SizedBox(height: 8),
+
+        // 배지
+        Wrap(
+          spacing: 6,
+          runSpacing: 6,
+          children: facility.badges.map((b) => badge(b)).toList(),
+        ),
+        const SizedBox(height: 12),
+
+        // 액션 버튼
+        Row(
+          children: [
+            _ActionChip(
+              icon: Icons.favorite,
+              label: isFavorite ? '관심 해제' : '관심',
+              onTap: onFavoriteToggle,
+              color: isFavorite ? Colors.red : Colors.black87,
+              outline: true,
+            ),
+            const SizedBox(width: 8),
+            _ActionChip(
+              icon: Icons.phone_in_talk,
+              label: '상담',
+              onTap: onConsult,
+              outline: true,
+            ),
+            const Spacer(),
+            ElevatedButton(
+              onPressed: onDetail,
+              style: ElevatedButton.styleFrom(
+                elevation: 0,
+                backgroundColor: primaryColor,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              ),
+              child: const Text('상세확인',
+                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+            ),
+          ],
+        ),
+      ]),
+    );
+  }
+}
+
+class _ActionChip extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+  final bool outline;
+  final Color? color;
+
+  const _ActionChip({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+    this.outline = false,
+    this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final child = Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, size: 18, color: color ?? Colors.black87),
+        const SizedBox(width: 6),
+        Text(label,
+            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: color ?? Colors.black87)),
+      ],
+    );
+
+    if (outline) {
+      return InkWell(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: AppColors.border),
+          ),
+          child: child,
+        ),
+      );
+    }
+
+    return ElevatedButton(
+      onPressed: onTap,
+      style: ElevatedButton.styleFrom(
+        elevation: 0,
+        backgroundColor: AppColors.brown,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      ),
+      child: child,
     );
   }
 }
