@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'funeral_matching_4.dart'; // FmFacilityDetailPage
+
 
 /// 결과 리스트 페이지 (피그마 funeral_matching_3 반영)
 /// - 전역 테마 간섭 최소화: 색/보더/라운드 로컬 고정
@@ -144,7 +146,16 @@ class _FmResultsPageState extends State<FmResultsPage> {
                       });
                     },
                     onConsult: () => _toast(context, '상담 연결을 준비 중입니다.'),
-                    onDetail: () => _toast(context, '상세 페이지는 다음 단계에서 연결됩니다.'),
+                    onDetail: () {
+                      // 상세 화면으로 이동하면서 시설 이름 전달
+                      Navigator.pushNamed(
+                        context, 
+                        '/fm/detail',
+                        arguments: results[i].name,
+                      );
+                    },
+
+
                     primaryColor: AppColors.brown,
                   ),
                 ),
@@ -405,6 +416,7 @@ class _FilterTabs extends StatelessWidget {
 }
 
 // ===== 리스트 카드 =====
+
 
 class _FacilityCard extends StatelessWidget {
   final Facility facility;

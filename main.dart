@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'funeral_matching_1.dart';
 import 'funeral_matching_2.dart';
 import 'funeral_matching_3.dart';
+import 'funeral_matching_4.dart';
 
 void main() {
   runApp(const MyApp());
@@ -37,6 +38,7 @@ class MyApp extends StatelessWidget {
         '/fm/intro'  : (_) => const FuneralMatchingScreen(),
         '/fm/options': (_) => const FmOptionsPage(),
         '/fm/results': (_) => const FmResultsPage(),
+        '/fm/detail' : (_) => FmDetailPage(),
       },
       initialRoute: '/fm/intro',
     );
