@@ -3,7 +3,8 @@ import 'funeral_matching_1.dart';
 import 'funeral_matching_2.dart';
 import 'funeral_matching_3.dart';
 import 'funeral_matching_4.dart';
-import 'funeral_matching_5.dart'; // 새로 추가
+import 'funeral_matching_5.dart';
+import 'funeral_matching_6.dart';
 
 void main() {
   runApp(const MyApp());
@@ -39,7 +40,8 @@ class MyApp extends StatelessWidget {
         '/fm/options'    : (_) => const FmOptionsPage(),
         '/fm/results'    : (_) => const FmResultsPage(),
         '/fm/detail'     : (_) => const FmDetailPage(),
-        '/fm/reservation': (_) => const FmReservationPage(), // 새로 추가
+        '/fm/reservation': (_) => const FmReservationPage(),
+        '/fm/complete'   : (_) => const FmReservationCompletePage(),
       },
       initialRoute: '/fm/intro',
     );
