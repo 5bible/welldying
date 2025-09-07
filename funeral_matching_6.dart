@@ -215,7 +215,7 @@ class _FmReservationCompletePageState extends State<FmReservationCompletePage>
           
           // 예약 정보들
           _buildInfoRow('시설명', '평안 동물병원 장례식장'),
-          _buildInfoRow('반려동물', '매상이 (미니어처 푸들, 3kg)'),
+          _buildInfoRow('반려동물', '매생이 (미니어처 푸들, 3kg)'),
           _buildInfoRow('예약일시', '8월 22일 (금) 15:00'),
           _buildInfoRow('보호자', '김춘식 010-1111-2222'),
           
@@ -354,11 +354,7 @@ class _FmReservationCompletePageState extends State<FmReservationCompletePage>
           children: [
             Expanded(
               child: OutlinedButton(
-                onPressed: () => Navigator.pushNamedAndRemoveUntil(
-                  context, 
-                  '/fm/intro', 
-                  (route) => false,
-                ),
+                onPressed: () => _showChangeReservationDialog(), // 수정된 부분
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   side: const BorderSide(color: AppColors.border),
@@ -379,7 +375,7 @@ class _FmReservationCompletePageState extends State<FmReservationCompletePage>
             const SizedBox(width: 12),
             Expanded(
               child: OutlinedButton(
-                onPressed: () => _showCancelDialog(),
+                onPressed: () => Navigator.pushNamed(context, '/fm/cancel'), // 7번 화면으로 이동
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   side: const BorderSide(color: AppColors.border),
@@ -435,12 +431,12 @@ class _FmReservationCompletePageState extends State<FmReservationCompletePage>
     );
   }
 
-  void _showCancelDialog() {
+  void _showChangeReservationDialog() {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('예약 취소'),
-        content: const Text('정말로 예약을 취소하시겠습니까?\n취소된 예약은 복구할 수 없습니다.'),
+        title: const Text('예약 변경'),
+        content: const Text('예약을 변경하시겠습니까?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -449,14 +445,13 @@ class _FmReservationCompletePageState extends State<FmReservationCompletePage>
           TextButton(
             onPressed: () {
               Navigator.pop(context);
-              _showToast('예약이 취소되었습니다.');
               Navigator.pushNamedAndRemoveUntil(
                 context, 
                 '/fm/intro', 
                 (route) => false,
               );
             },
-            child: const Text('네, 취소합니다', style: TextStyle(color: Colors.red)),
+            child: const Text('예'),
           ),
         ],
       ),

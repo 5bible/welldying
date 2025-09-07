@@ -5,6 +5,9 @@ import 'funeral_matching_3.dart';
 import 'funeral_matching_4.dart';
 import 'funeral_matching_5.dart';
 import 'funeral_matching_6.dart';
+import 'funeral_matching_7.dart';
+import 'funeral_matching_8.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -42,6 +45,8 @@ class MyApp extends StatelessWidget {
         '/fm/detail'     : (_) => const FmDetailPage(),
         '/fm/reservation': (_) => const FmReservationPage(),
         '/fm/complete'   : (_) => const FmReservationCompletePage(),
+        '/fm/cancel'     : (_) => const FmCancelPage(),
+        '/fm/cancel_complete' : (_) => const FmCancelCompletePage(),
       },
       initialRoute: '/fm/intro',
     );

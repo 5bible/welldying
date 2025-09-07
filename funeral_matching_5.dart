@@ -19,9 +19,14 @@ class FmReservationPage extends StatefulWidget {
 }
 
 class _FmReservationPageState extends State<FmReservationPage> {
+  // 모든 컨트롤러 정의
   final _nameController = TextEditingController();
   final _phoneController = TextEditingController();
   final _petNameController = TextEditingController();
+  final _petBreedController = TextEditingController();
+  final _petWeightController = TextEditingController();
+  final _petAgeController = TextEditingController();
+  final _petNotesController = TextEditingController();
   
   String selectedDate = '';
   String selectedTime = '';
@@ -35,10 +40,28 @@ class _FmReservationPageState extends State<FmReservationPage> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    // 기본값 설정 (매생이 정보) - 1번 화면의 정보를 가져와서 설정
+    _petNameController.text = '매생이';
+    _petBreedController.text = '미니어처푸들';
+    _petWeightController.text = '3kg';
+    _petAgeController.text = '8세';
+    
+    // 사용자 정보도 기본값 설정
+    _nameController.text = '김춘식';
+    _phoneController.text = '010-1111-2222';
+  }
+
+  @override
   void dispose() {
     _nameController.dispose();
     _phoneController.dispose();
     _petNameController.dispose();
+    _petBreedController.dispose();
+    _petWeightController.dispose();
+    _petAgeController.dispose();
+    _petNotesController.dispose();
     super.dispose();
   }
 
@@ -79,7 +102,7 @@ class _FmReservationPageState extends State<FmReservationPage> {
             const SizedBox(height: 24),
             _buildSpecialRequests(),
             const SizedBox(height: 24),
-            _buildReservationSummary(), // 새로 추가된 예약 요약 섹션
+            _buildReservationSummary(),
             const SizedBox(height: 100),
           ],
         ),
@@ -187,11 +210,19 @@ class _FmReservationPageState extends State<FmReservationPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            '반려동물 정보',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+          Row(
+            children: [
+              const Icon(Icons.pets, color: AppColors.accent, size: 24),
+              const SizedBox(width: 8),
+              const Text(
+                '반려동물 정보',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+              ),
+            ],
           ),
           const SizedBox(height: 16),
+          
+          // 반려동물 이름
           _buildTextField(
             controller: _petNameController,
             label: '반려동물 이름',
@@ -199,12 +230,49 @@ class _FmReservationPageState extends State<FmReservationPage> {
             icon: Icons.pets,
           ),
           const SizedBox(height: 16),
+          
+          // 품종과 무게를 나란히 배치
           Row(
             children: [
-              const Icon(Icons.info_outline, color: AppColors.accent, size: 20),
-              const SizedBox(width: 8),
-              const Text('품종: 미니어처푸들 · 무게: 3kg'),
+              Expanded(
+                child: _buildTextField(
+                  controller: _petBreedController,
+                  label: '품종',
+                  hint: '미니어처푸들',
+                  icon: Icons.category,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _buildTextField(
+                  controller: _petWeightController,
+                  label: '무게',
+                  hint: '3kg',
+                  icon: Icons.fitness_center,
+                  keyboardType: TextInputType.text,
+                ),
+              ),
             ],
+          ),
+          const SizedBox(height: 16),
+          
+          // 나이
+          _buildTextField(
+            controller: _petAgeController,
+            label: '나이',
+            hint: '8세',
+            icon: Icons.cake,
+            keyboardType: TextInputType.text,
+          ),
+          const SizedBox(height: 16),
+          
+          // 특이사항 (선택사항)
+          _buildTextField(
+            controller: _petNotesController,
+            label: '특이사항 (선택사항)',
+            hint: '특이사항을 적어주세요.',
+            icon: Icons.note,
+            maxLines: 3,
           ),
         ],
       ),
@@ -359,18 +427,29 @@ class _FmReservationPageState extends State<FmReservationPage> {
     );
   }
 
-  // 새로 추가된 예약 요약 섹션
   Widget _buildReservationSummary() {
     // 입력 정보가 모두 있는지 확인
     final hasAllInfo = _nameController.text.isNotEmpty &&
         _phoneController.text.isNotEmpty &&
         _petNameController.text.isNotEmpty &&
+        _petBreedController.text.isNotEmpty &&
+        _petWeightController.text.isNotEmpty &&
         selectedDate.isNotEmpty &&
         selectedTime.isNotEmpty;
 
     if (!hasAllInfo) {
       return Container(); // 정보가 부족하면 표시하지 않음
     }
+
+    // 반려동물 정보 문자열 생성
+    String petInfo = '${_petNameController.text} (${_petBreedController.text}';
+    if (_petWeightController.text.isNotEmpty) {
+      petInfo += ', ${_petWeightController.text}';
+    }
+    if (_petAgeController.text.isNotEmpty) {
+      petInfo += ', ${_petAgeController.text}';
+    }
+    petInfo += ')';
 
     return Container(
       padding: const EdgeInsets.all(20),
@@ -402,7 +481,7 @@ class _FmReservationPageState extends State<FmReservationPage> {
           _buildSummaryRow('연락처', _phoneController.text),
           
           // 반려동물 정보
-          _buildSummaryRow('반려동물', '${_petNameController.text} (미니어처푸들, 3kg)'),
+          _buildSummaryRow('반려동물', petInfo),
           
           // 예약 일시
           _buildSummaryRow('예약 일시', '$selectedDate ($selectedTime)'),
@@ -480,6 +559,7 @@ class _FmReservationPageState extends State<FmReservationPage> {
     required String hint,
     required IconData icon,
     TextInputType? keyboardType,
+    int maxLines = 1,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -492,6 +572,7 @@ class _FmReservationPageState extends State<FmReservationPage> {
         TextField(
           controller: controller,
           keyboardType: keyboardType,
+          maxLines: maxLines,
           onChanged: (value) => setState(() {}), // 입력할 때마다 요약 섹션 업데이트
           decoration: InputDecoration(
             hintText: hint,
@@ -597,6 +678,8 @@ class _FmReservationPageState extends State<FmReservationPage> {
     if (_nameController.text.isEmpty ||
         _phoneController.text.isEmpty ||
         _petNameController.text.isEmpty ||
+        _petBreedController.text.isEmpty ||
+        _petWeightController.text.isEmpty ||
         selectedDate.isEmpty ||
         selectedTime.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(

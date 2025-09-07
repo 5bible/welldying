@@ -236,7 +236,7 @@ class _FmDetailPageState extends State<FmDetailPage> {
           const SizedBox(width: 12),
           const Expanded(
             child: Text(
-              '매상이 (미니어처푸들, 3kg) 맞춤견적',
+              '매생이 (미니어처푸들, 3kg) 맞춤견적',
               style: TextStyle(fontWeight: FontWeight.w600),
             ),
           ),
