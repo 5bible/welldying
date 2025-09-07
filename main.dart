@@ -3,6 +3,7 @@ import 'funeral_matching_1.dart';
 import 'funeral_matching_2.dart';
 import 'funeral_matching_3.dart';
 import 'funeral_matching_4.dart';
+import 'funeral_matching_5.dart'; // 새로 추가
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
-        colorScheme: const ColorScheme.light(),           // seed/primarySwatch 미사용
+        colorScheme: const ColorScheme.light(),
         scaffoldBackgroundColor: const Color(0xFFF5F5F5),
         fontFamily: 'NotoSans',
         appBarTheme: const AppBarTheme(
@@ -33,12 +34,12 @@ class MyApp extends StatelessWidget {
           centerTitle: false,
         ),
       ),
-      // ⬇️ 전역 라우트 맵(문자열 경로만 사용) — routes.dart 불필요
       routes: {
-        '/fm/intro'  : (_) => const FuneralMatchingScreen(),
-        '/fm/options': (_) => const FmOptionsPage(),
-        '/fm/results': (_) => const FmResultsPage(),
-        '/fm/detail' : (_) => FmDetailPage(),
+        '/fm/intro'      : (_) => const FuneralMatchingScreen(),
+        '/fm/options'    : (_) => const FmOptionsPage(),
+        '/fm/results'    : (_) => const FmResultsPage(),
+        '/fm/detail'     : (_) => const FmDetailPage(),
+        '/fm/reservation': (_) => const FmReservationPage(), // 새로 추가
       },
       initialRoute: '/fm/intro',
     );
